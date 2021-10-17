@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./HomeHeaderNew.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { userCollection } from "./firebase";
 
-const HomeHeaderNew = (props) => {
-  const user = props.user;
-  const selected = props.selected;
+import { getDocs } from "firebase/firestore";
+
+const HomeHeaderNew = ({ user, selected }) => {
+  const history = useHistory("");
+  const [allUsers, setAllUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  if (user === false) {
+    history.push("/login");
+  }
 
   const collapseSearch = () => {
     document.getElementsByClassName("homeHeader__logo")[0].style.display =
@@ -29,14 +37,33 @@ const HomeHeaderNew = (props) => {
       "none";
     document.getElementsByClassName("searchBox")[0].style.display = "block";
   };
-  const updateSearchResults = () => {};
+
+  const updateSearchResults = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  useEffect(() => {
+    return getAllUserData().then(() => {
+      console.log(allUsers);
+    });
+  }, [searchTerm]);
+
+  async function getAllUserData() {
+    const querySnapshot = await getDocs(userCollection);
+    const dataArray = [];
+    querySnapshot.forEach((doc) => {
+      dataArray.push(doc.data());
+    });
+    setAllUsers(dataArray);
+  }
+
   return (
     <div className="homeHeader">
       <div className="homeHeaderLogoAndSearch">
         <Link to="/">
           <img
             src="https://i.ibb.co/72dN4JJ/Facebook-icon-2019-1.png"
-            class="homeHeader__logo"
+            className="homeHeader__logo"
           />
         </Link>
         <div className="homeHeader__searchBack" onClick={collapseSearch}>

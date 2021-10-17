@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 const firebaseApp = {
   apiKey: "AIzaSyDrwtFr04xlXPvqfge5FXhWMttvxDBDY1M",
@@ -18,6 +18,5 @@ const app = initializeApp(firebaseApp);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const userCollection = collection(db, "users");
-// const storage = firebase.storage();
 
 export { auth, db, userCollection };
