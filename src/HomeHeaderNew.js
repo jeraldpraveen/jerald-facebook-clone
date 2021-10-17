@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { userCollection } from "./firebase";
 
-import { getDocs } from "firebase/firestore";
+import { getDocs, onSnapshot } from "firebase/firestore";
 
 const HomeHeaderNew = ({ user, selected }) => {
   const history = useHistory("");
@@ -43,19 +43,14 @@ const HomeHeaderNew = ({ user, selected }) => {
   };
 
   useEffect(() => {
-    return getAllUserData().then(() => {
-      console.log(allUsers);
+    onSnapshot(userCollection, (querySnapshot) => {
+      const dataArray = [];
+      querySnapshot.forEach((doc) => {
+        dataArray.push(doc.data());
+      });
+      setAllUsers(dataArray);
     });
   }, [searchTerm]);
-
-  async function getAllUserData() {
-    const querySnapshot = await getDocs(userCollection);
-    const dataArray = [];
-    querySnapshot.forEach((doc) => {
-      dataArray.push(doc.data());
-    });
-    setAllUsers(dataArray);
-  }
 
   return (
     <div className="homeHeader">
