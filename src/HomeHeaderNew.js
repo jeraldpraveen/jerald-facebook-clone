@@ -11,6 +11,7 @@ const HomeHeaderNew = ({ user, selected }) => {
   const history = useHistory("");
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   if (user === false) {
     history.push("/login");
@@ -49,6 +50,15 @@ const HomeHeaderNew = ({ user, selected }) => {
         dataArray.push(doc.data());
       });
       setAllUsers(dataArray);
+      if (allUsers !== undefined) {
+        const finalUsers = allUsers.filter((user) => {
+          return (
+            user.displayName.toLowerCase().indexOf(searchTerm.toLowerCase()) !==
+            -1
+          );
+        });
+        setFilteredUsers(finalUsers);
+      }
     });
   }, [searchTerm]);
 
