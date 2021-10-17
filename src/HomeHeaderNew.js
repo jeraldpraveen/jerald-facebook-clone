@@ -4,8 +4,8 @@ import { Link, useHistory } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { userCollection } from "./firebase";
-
 import { getDocs, onSnapshot } from "firebase/firestore";
+import { Avatar } from "@material-ui/core";
 
 const HomeHeaderNew = ({ user, selected }) => {
   const history = useHistory("");
@@ -41,6 +41,8 @@ const HomeHeaderNew = ({ user, selected }) => {
 
   const updateSearchResults = (event) => {
     setSearchTerm(event.target.value);
+    document.getElementsByClassName("dropdown-content3")[0].style.display =
+      "block";
   };
 
   useEffect(() => {
@@ -85,7 +87,17 @@ const HomeHeaderNew = ({ user, selected }) => {
         />
         <div className="dropdown-content3">
           <ul id="list">
-            <li></li>
+            {allUsers !== undefined &&
+              filteredUsers.map((user1) => {
+                return (
+                  <li>
+                    <a onClick={collapseSearch} href="/">
+                      <Avatar className="searchAvatar" src={user1.photoURL} />
+                      <h3 className="seacrchH3">{user1.displayName}</h3>
+                    </a>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </div>
